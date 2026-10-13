@@ -58,10 +58,32 @@ nav{font-family:var(--mono);font-size:.8em;letter-spacing:.04em;color:var(--ink-
 .callout h4{font-family:var(--mono);margin:0 0 .5em;font-size:.82em;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
 .tag-pill{display:inline-block;font-family:var(--mono);font-size:.7em;padding:1px 6px;border:1px solid var(--line);border-radius:2px;background:var(--face);color:var(--ink-dim)}
 .console-box{background:var(--face);border:1px solid var(--line);border-radius:3px;padding:1.2em;margin:1.5em 0;font-family:var(--mono);font-size:.85em}
-.console-box input{font-family:var(--mono);padding:5px 8px;font-size:.95em;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%;max-width:320px;margin-bottom:8px}
+.console-box input, .console-box select{font-family:var(--mono);padding:5px 8px;font-size:.92em;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%;max-width:320px;margin-bottom:8px}
 .console-box button{font-family:var(--mono);background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:4px 8px;cursor:pointer;margin:4px 4px 4px 0}
 .console-box button:hover{border-color:var(--brass)}
 .hex-view{font-family:var(--mono);background:var(--bg);border:1px solid var(--line);padding:.8em;margin-top:.8em;font-size:.85em;color:var(--ink);word-break:break-all}
+
+.btn-preset{font-family:var(--mono);font-size:.78rem;padding:4px 8px;margin:2px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;border-radius:2px}
+.btn-preset:hover{border-color:var(--brass)}
+.btn-preset.active{background:var(--face-raised);border-color:var(--brass);font-weight:700}
+.badge-pass{background:rgba(26,127,55,0.12);border:1px solid var(--ok);color:var(--ok);padding:4px 10px;border-radius:2px;font-family:var(--mono);font-size:.85rem;font-weight:700;display:inline-block}
+.badge-fail{background:rgba(192,57,43,0.12);border:1px solid var(--alert);color:var(--alert);padding:4px 10px;border-radius:2px;font-family:var(--mono);font-size:.85rem;font-weight:700;display:inline-block}
+.dissector-wrap{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;font-family:var(--mono);font-size:.82rem}
+.byte-block{padding:6px 10px;border-radius:2px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;background:var(--bg)}
+.byte-block span.hex{font-weight:700;letter-spacing:.05em}
+.byte-block span.lbl{font-size:.65rem;color:var(--ink-dim);margin-top:2px;text-transform:uppercase}
+.b-access{border-color:#0077aa;background:rgba(0,119,170,0.06)}
+.b-mac{border-color:#00a2e7;background:rgba(0,162,231,0.06)}
+.b-flags{border-color:#941352;background:rgba(148,19,82,0.06)}
+.b-name{border-color:#b58900;background:rgba(181,137,0,0.06)}
+.b-mfg{border-color:#777;background:rgba(100,100,100,0.06)}
+.b-crc{border-color:#ccc;background:rgba(150,150,150,0.04)}
+.audit-list{list-style:none;padding:0;margin:10px 0;font-size:.86rem;line-height:1.6}
+.audit-list li{padding:3px 0;display:flex;align-items:baseline;gap:8px}
+.audit-list li strong{font-family:var(--mono);font-size:.82rem;min-width:130px}
+.scanner-feed{background:var(--bg);border:1px solid var(--line);border-radius:2px;height:240px;overflow-y:auto;padding:.6em;font-family:var(--mono);font-size:.8rem;line-height:1.5}
+.scanner-entry{padding:4px 0;border-bottom:1px dotted var(--line);display:flex;justify-content:space-between;gap:8px}
+.scanner-entry:last-child{border-bottom:none}
 </style>
 </head>
 <body>
@@ -77,6 +99,7 @@ nav{font-family:var(--mono);font-size:.8em;letter-spacing:.04em;color:var(--ink-
   <a href="../pocket-dial/">pocket-dial</a> &middot;
   <a href="../ESP32_AdBlocker_Reborn/">ESP32 AdBlocker</a> &middot;
   <a href="../bcd325-dashboard/">bcd325-dashboard</a> &middot;
+  <a href="../glossh/">glossh</a> &middot;
   <a href="../wifi-ble-marauder/">wifi-ble-marauder</a> &middot;
   <a href="../deanon-demo/">deanon-demo</a> &middot;
   <a href="../sentinel-node-demo/">sentinel-node-demo</a> &middot;
@@ -280,45 +303,147 @@ nav{font-family:var(--mono);font-size:.8em;letter-spacing:.04em;color:var(--ink-
   </p>
 </div>
 
-<h2>03 &middot; interactive ble packet crafter</h2>
+<h2>03 &middot; interactive ble packet crafter &amp; compliance auditor</h2>
 <p>
-  Compose your custom RF sign message below. The generator calculates byte budgets against the 31-byte legacy BLE advertisement limit and renders the raw hex byte stream:
+  Configure packet parameters below or select an attack scenario preset. The live compliance engine tests your packet against the Bluetooth Core Specification and the Good Trouble protocol rules, rendering color-coded byte dissection in real time:
 </p>
 
 <div class="console-box">
-  <label for="custom-sign" style="display:block;margin-bottom:4px;color:var(--ink-dim)">ENTER SIGN TEXT (Max 18 chars for Name + Mfg Data):</label>
-  <input type="text" id="custom-sign" maxlength="18" value="CONSENT_DENIED" oninput="updatePacket()">
-  
-  <div style="margin-top:6px">
-    <button onclick="setChant('GOOD_TROUBLE')">GOOD_TROUBLE</button>
-    <button onclick="setChant('I_AM_NOT_DATA')">I_AM_NOT_DATA</button>
-    <button onclick="setChant('NO_TRACKING')">NO_TRACKING</button>
-    <button onclick="setChant('NOT_YOUR_NODE')">NOT_YOUR_NODE</button>
+  <div style="margin-bottom:8px">
+    <div style="font-size:.8em;color:var(--ink-dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em">Scenario Presets:</div>
+    <button class="btn-preset active" id="btn-p-speech" onclick="loadPreset('speech')">&check; Good Trouble (Expressive Speech)</button>
+    <button class="btn-preset" id="btn-p-sourapple" onclick="loadPreset('sourapple')">&cross; SourApple (Modal DoS)</button>
+    <button class="btn-preset" id="btn-p-doppel" onclick="loadPreset('doppel')">&cross; Civilian Doppelganger</button>
+    <button class="btn-preset" id="btn-p-medical" onclick="loadPreset('medical')">&cross; Medical CGM Spoof</button>
+    <button class="btn-preset" id="btn-p-desync" onclick="loadPreset('desync')">&cross; Correlator Poisoning</button>
   </div>
 
-  <div style="margin-top:12px;font-size:.9em">
-    <b>Byte Budget:</b> <span id="byte-count" style="color:var(--brass);font-weight:700">22 / 31 Bytes</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;margin-top:12px">
+    <div>
+      <label for="custom-sign" style="display:block;margin-bottom:2px;font-size:.8em;color:var(--ink-dim)">SIGN TEXT (Local Name):</label>
+      <input type="text" id="custom-sign" maxlength="18" value="CONSENT_DENIED" oninput="auditPacket()">
+    </div>
+    <div>
+      <label for="cfg-power" style="display:block;margin-bottom:2px;font-size:.8em;color:var(--ink-dim)">TRANSMIT POWER (TX):</label>
+      <select id="cfg-power" onchange="auditPacket()">
+        <option value="-12" selected>-12 dBm (ESP_PWR_LVL_N12 &middot; Crowd Safe)</option>
+        <option value="0">0 dBm (ESP_PWR_LVL_P0 &middot; Default)</option>
+        <option value="+9">+9 dBm (ESP_PWR_LVL_P9 &middot; Venue Swamping)</option>
+        <option value="+20">+20 dBm (External Amp &middot; Total RF Capture)</option>
+      </select>
+    </div>
+    <div>
+      <label for="cfg-interval" style="display:block;margin-bottom:2px;font-size:.8em;color:var(--ink-dim)">ADVERTISING INTERVAL:</label>
+      <select id="cfg-interval" onchange="auditPacket()">
+        <option value="100" selected>100 ms (~100ms + random jitter &middot; ALOHA)</option>
+        <option value="500">500 ms (Low power conserving)</option>
+        <option value="20">20 ms (Burst Flood &middot; Band Exhaustion)</option>
+      </select>
+    </div>
+    <div>
+      <label for="cfg-oui" style="display:block;margin-bottom:2px;font-size:.8em;color:var(--ink-dim)">OUI / MAC PREFIX:</label>
+      <select id="cfg-oui" onchange="auditPacket()">
+        <option value="02:47:54" selected>02:47:54 (Honest Locally-Administered 'GT')</option>
+        <option value="44:61:32">44:61:32 (Civilian Bystander Phone &middot; Cloned)</option>
+        <option value="F0:D5:BF">F0:D5:BF (Apple Inc &middot; Hardware Spoof)</option>
+        <option value="94:DB:56">94:DB:56 (Samsung Electronics &middot; Hardware Spoof)</option>
+      </select>
+    </div>
+    <div>
+      <label for="cfg-cid" style="display:block;margin-bottom:2px;font-size:.8em;color:var(--ink-dim)">MFG COMPANY ID (CID):</label>
+      <select id="cfg-cid" onchange="auditPacket()">
+        <option value="FFFF" selected>0xFFFF (Experimental / Good Trouble)</option>
+        <option value="004C">0x004C (Apple Inc &middot; Continuity / AirPods)</option>
+        <option value="00E0">0x00E0 (Google LLC &middot; Fast Pair)</option>
+        <option value="0006">0x0006 (Microsoft Corp &middot; Swift Pair)</option>
+      </select>
+    </div>
+    <div>
+      <label for="cfg-access" style="display:block;margin-bottom:2px;font-size:.8em;color:var(--ink-dim)">ACCESS ADDRESS:</label>
+      <select id="cfg-access" onchange="auditPacket()">
+        <option value="8E89BED6" selected>0x8E89BED6 (Standard Adv Access Address)</option>
+        <option value="AAAAAAAA">0xAAAAAAAA (Alternating Sync Word Collider)</option>
+        <option value="55555555">0x55555555 (Baseband Preamble Collider)</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div>
+      <b>Byte Budget:</b> <span id="byte-count" style="color:var(--brass);font-weight:700">22 / 31 Bytes</span>
+    </div>
+    <div id="compliance-badge" class="badge-pass">&check; LAWFUL CONSTITUTIONAL RF SPEECH</div>
+  </div>
+
+  <div style="margin-top:10px">
+    <div style="font-size:.78em;color:var(--ink-dim);margin-bottom:4px;text-transform:uppercase">Interactive GAP Frame Dissector:</div>
+    <div class="dissector-wrap" id="dissector-box">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <div style="margin-top:10px">
+    <div style="font-size:.78em;color:var(--ink-dim);margin-bottom:4px;text-transform:uppercase">Compliance Engine Findings:</div>
+    <ul class="audit-list" id="audit-findings">
+      <!-- Populated by JS -->
+    </ul>
   </div>
 
   <div class="hex-view" id="hex-output">Generating raw advertisement bytes...</div>
 </div>
 
-<h2>04 &middot; deployment options</h2>
+<h2>04 &middot; live web bluetooth scanner &amp; beacon monitor</h2>
+<p>
+  Inspect local airwaves directly from your browser. Use the <b>Web Bluetooth API</b> to scan for active Bluetooth devices, or run the high-fidelity simulator to test packet classification in environments where Web Bluetooth is restricted:
+</p>
+
+<div class="console-box">
+  <div style="margin-bottom:8px;display:flex;gap:6px;flex-wrap:wrap">
+    <button onclick="requestBleScan()" id="btn-web-ble">Request Bluetooth Scan (Web BLE)</button>
+    <button onclick="toggleSimStream()" id="btn-sim-stream">Start Simulated Packet Stream</button>
+    <button onclick="clearScanFeed()">Clear Feed</button>
+  </div>
+  
+  <div id="ble-support-note" style="font-size:.78em;color:var(--ink-dim);margin-bottom:8px">
+    Browser status: checking Web Bluetooth support...
+  </div>
+
+  <div class="scanner-feed" id="scanner-feed">
+    <div style="color:var(--ink-dim);font-style:italic">Ready. Start the simulated stream or connect via Web Bluetooth to inspect incoming BLE advertisements...</div>
+  </div>
+</div>
+
+<h2>05 &middot; deployment firmware &amp; live generator</h2>
 
 <h3>Option A &mdash; Static Firmware (<code>good_trouble.ino</code>)</h3>
 <p>
-  Cycles through an array of hardcoded protest chants every 2,000 ms, randomizing the lower 3 octets of the MAC address on each rotation:
+  Cycles through your protest chants every 2,000 ms, randomizing the lower 3 octets of the MAC address on each rotation under the honest <code>02:47:54</code> prefix. The code below adapts automatically to your customized settings:
 </p>
-<pre><code>static const char* MESSAGES[] = {
-  "GOOD_TROUBLE", "CONSENT_DENIED", "I_AM_NOT_DATA",
-  "NO_TRACKING",   "STOP_WATCHING",   "TRACK_THIS"
-};
-static const uint8_t TROUBLE_OUI[3] = { 0x02, 0x47, 0x54 }; // 'GT', locally administered</code></pre>
+<pre><code id="cpp-code-preview">BLEDevice::init("CONSENT_DENIED");
+BLEDevice::setPower(ESP_PWR_LVL_N12);
+BLEAdvertisementData data;
+data.setName("CONSENT_DENIED");
+std::string mfg; mfg += (char)0xFF; mfg += (char)0xFF;
+mfg.append("CONSENT_DENIED");
+data.setManufacturerData(mfg);
+adv->setAdvertisementData(data);</code></pre>
+<button onclick="copyCppCode()" id="btn-copy-cpp" style="font-family:var(--mono);font-size:.8em;margin-top:6px">Copy C++ Code</button>
 
 <h3>Option B &mdash; Transient Captive Portal (<code>good_trouble_config.ino</code>)</h3>
 <p>
   On first boot (or when the BOOT button is held), the ESP32 opens an ephemeral SoftAP named <code>good-trouble-setup</code> with a captive DNS portal. The user joins from their phone, saves their custom message into NVS flash, and the firmware <b>permanently kills the Wi-Fi stack</b> (<code>WiFi.mode(WIFI_OFF)</code>), transitioning purely into low-power BLE broadcast.
 </p>
+
+<h2>06 &middot; hardware &amp; flash-and-go guide</h2>
+<p>
+  Any standard ESP32 development board (~$5&ndash;8, e.g. ESP32-WROOM DevKit or ESP32-S3) is supported. No antenna upgrades or soldering required:
+</p>
+<ol style="font-size:.92em;line-height:1.6">
+  <li>Install the <b>Arduino IDE</b> and add the ESP32 board support URL from Espressif.</li>
+  <li>Open <code>good_trouble.ino</code> or <code>good_trouble_config.ino</code> from the repository.</li>
+  <li>Plug the ESP32 into USB, select your board and serial COM port, and click <b>Upload</b>.</li>
+  <li><b>Off Switch:</b> Unplug the USB cable. The device has no battery and ceases transmission immediately.</li>
+</ol>
 
 </main>
 
@@ -336,36 +461,309 @@ static const uint8_t TROUBLE_OUI[3] = { 0x02, 0x47, 0x54 }; // 'GT', locally adm
   [["contrast","pd-contrast"],["inverted","pd-inverted"]].forEach(function(p){if(load(p[1]))h.classList.add(p[0])});
   document.getElementById("contrast").onclick=function(){save("pd-contrast",h.classList.toggle("contrast"))};
   document.getElementById("invmode").onclick=function(){save("pd-inverted",h.classList.toggle("inverted"))};
-  updatePacket();
-})();
-
-function setChant(txt){
-  document.getElementById('custom-sign').value = txt;
-  updatePacket();
-}
-
-function updatePacket(){
-  var msg = document.getElementById('custom-sign').value || 'TEST';
-  var len = msg.length;
-  // Block 1: Flags (3 bytes: 02 01 06)
-  // Block 2: Name (1 byte len + 1 byte type 0x09 + text)
-  var nameLen = len + 1;
-  var total = 3 + (nameLen + 1);
   
-  document.getElementById('byte-count').textContent = total + ' / 31 Bytes (GAP Valid)';
-
-  var hex = '02 01 06 '; // Flags
-  hex += (nameLen < 16 ? '0' : '') + nameLen.toString(16).toUpperCase() + ' 09 ';
-  for (var i = 0; i < len; i++) {
-    var c = msg.charCodeAt(i).toString(16).toUpperCase();
-    hex += (c.length < 2 ? '0' : '') + c + ' ';
+  if (navigator.bluetooth) {
+    document.getElementById('ble-support-note').textContent = 'Browser Web Bluetooth API: Supported (Desktop Chrome / Edge / Opera).';
+  } else {
+    document.getElementById('ble-support-note').textContent = 'Browser Web Bluetooth API: Unavailable in this browser. Use the simulator below.';
   }
   
-  var out = 'RAW ADV PAYLOAD (PDU DATA):\n' + hex + '\n\n';
-  out += 'CORRESPONDING OUI:\n02:47:54:E1:9A:04 (Randomized lower octets on cycle)\n\n';
-  out += 'C++ CODE SNIPPET:\nBLEDevice::init("' + msg + '");\nBLEAdvertisementData data;\ndata.setName("' + msg + '");';
+  auditPacket();
+})();
+
+var simTimer = null;
+
+function clearPresetButtons() {
+  var btns = document.querySelectorAll('.btn-preset');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+}
+
+function loadPreset(preset) {
+  clearPresetButtons();
+  if (preset === 'speech') {
+    document.getElementById('btn-p-speech').classList.add('active');
+    document.getElementById('custom-sign').value = 'CONSENT_DENIED';
+    document.getElementById('cfg-power').value = '-12';
+    document.getElementById('cfg-interval').value = '100';
+    document.getElementById('cfg-oui').value = '02:47:54';
+    document.getElementById('cfg-cid').value = 'FFFF';
+    document.getElementById('cfg-access').value = '8E89BED6';
+  } else if (preset === 'sourapple') {
+    document.getElementById('btn-p-sourapple').classList.add('active');
+    document.getElementById('custom-sign').value = 'AIRPODS_PRO_MAX';
+    document.getElementById('cfg-power').value = '+9';
+    document.getElementById('cfg-interval').value = '20';
+    document.getElementById('cfg-oui').value = 'F0:D5:BF';
+    document.getElementById('cfg-cid').value = '004C';
+    document.getElementById('cfg-access').value = '8E89BED6';
+  } else if (preset === 'doppel') {
+    document.getElementById('btn-p-doppel').classList.add('active');
+    document.getElementById('custom-sign').value = 'REBEL_SLOGAN_99';
+    document.getElementById('cfg-power').value = '0';
+    document.getElementById('cfg-interval').value = '100';
+    document.getElementById('cfg-oui').value = '44:61:32';
+    document.getElementById('cfg-cid').value = 'FFFF';
+    document.getElementById('cfg-access').value = '8E89BED6';
+  } else if (preset === 'medical') {
+    document.getElementById('btn-p-medical').classList.add('active');
+    document.getElementById('custom-sign').value = 'DEXCOM_G6_SENSOR';
+    document.getElementById('cfg-power').value = '0';
+    document.getElementById('cfg-interval').value = '100';
+    document.getElementById('cfg-oui').value = '02:47:54';
+    document.getElementById('cfg-cid').value = 'FFFF';
+    document.getElementById('cfg-access').value = '8E89BED6';
+  } else if (preset === 'desync') {
+    document.getElementById('btn-p-desync').classList.add('active');
+    document.getElementById('custom-sign').value = 'DESYNC_CORRUPT';
+    document.getElementById('cfg-power').value = '+20';
+    document.getElementById('cfg-interval').value = '20';
+    document.getElementById('cfg-oui').value = '02:47:54';
+    document.getElementById('cfg-cid').value = 'FFFF';
+    document.getElementById('cfg-access').value = 'AAAAAAAA';
+  }
+  auditPacket();
+}
+
+function auditPacket() {
+  var msg = document.getElementById('custom-sign').value || 'TEST';
+  var pwr = parseInt(document.getElementById('cfg-power').value, 10);
+  var interval = parseInt(document.getElementById('cfg-interval').value, 10);
+  var oui = document.getElementById('cfg-oui').value;
+  var cid = document.getElementById('cfg-cid').value;
+  var access = document.getElementById('cfg-access').value;
+
+  var len = msg.length;
+  var nameLen = len + 1; // 1 byte AD type 0x09 + text
+  var mfgLen = (cid === 'FFFF' ? len + 2 : 7) + 1; // 1 byte AD type 0xFF + 2 bytes CID + payload
+  var total = 3 + (nameLen + 1) + (mfgLen + 1); // Flags(3) + Name + Mfg
+
+  document.getElementById('byte-count').textContent = total + ' / 31 Bytes (GAP ' + (total <= 31 ? 'Valid' : 'Overflow') + ')';
+
+  var violations = [];
+  var passes = [];
+
+  // 1. Access Address
+  if (access === '8E89BED6') {
+    passes.push('<strong>Access Address:</strong> Standard 0x8E89BED6 &middot; Spec compliant advertising framing.');
+  } else {
+    violations.push('<strong>Access Address:</strong> Illegal sync word (0x' + access + ') &middot; Baseband receiver desync and correlator poisoning.');
+  }
+
+  // 2. Identity / OUI
+  if (oui === '02:47:54') {
+    passes.push('<strong>Identity / OUI:</strong> Honest locally-administered OUI (02:47:54 "GT") &middot; No device doppelganging.');
+  } else if (oui === '44:61:32') {
+    violations.push('<strong>Identity / OUI:</strong> Doppelganging real civilian MAC &middot; Fabricates false logs in surveillance dragnets (The "Sentinel" Trap).');
+  } else {
+    violations.push('<strong>Identity / OUI:</strong> Impersonating commercial hardware vendor &middot; Unlawful identity spoofing.');
+  }
+
+  // 3. Manufacturer Data / CID
+  if (cid === 'FFFF') {
+    passes.push('<strong>Block 3 (Mfg Data):</strong> Experimental CID 0xFFFF with static text payload &middot; Non-intrusive.');
+  } else if (cid === '004C') {
+    violations.push('<strong>Block 3 (Mfg Data):</strong> Spoofed Apple Inc CID (0x004C) &middot; SourApple / AppleJuice UI modal denial-of-service.');
+  } else if (cid === '00E0') {
+    violations.push('<strong>Block 3 (Mfg Data):</strong> Spoofed Google CID (0x00E0) &middot; Android FastPair notification spam.');
+  } else if (cid === '0006') {
+    violations.push('<strong>Block 3 (Mfg Data):</strong> Spoofed Microsoft CID (0x0006) &middot; Windows SwiftPair desktop toast flooding.');
+  }
+
+  // 4. Power
+  if (pwr <= 0) {
+    passes.push('<strong>Transmit Power:</strong> ' + pwr + ' dBm &middot; Low RF footprint confined to immediate crowd perimeter (~5&ndash;15m).');
+  } else {
+    violations.push('<strong>Transmit Power:</strong> ' + pwr + ' dBm &middot; High power induces RF capture effect, wiping out civilian transmissions.');
+  }
+
+  // 5. Cadence / Interval
+  if (interval >= 100) {
+    passes.push('<strong>Timing Cadence:</strong> ' + interval + ' ms + pseudo-random jitter &middot; Compliant with ALOHA spectrum sharing.');
+  } else {
+    violations.push('<strong>Timing Cadence:</strong> ' + interval + ' ms burst flood without jitter &middot; Band exhaustion and systematic packet collisions.');
+  }
+
+  // 6. Name / Medical Check
+  if (msg.indexOf('DEXCOM') !== -1 || msg.indexOf('MEDTRONIC') !== -1 || msg.indexOf('GLUCOSE') !== -1) {
+    violations.push('<strong>Life-Safety UUID:</strong> Impersonating personal medical sensor telemetry &middot; Endangers nearby patient health.');
+  }
+
+  // Render Badge
+  var badgeEl = document.getElementById('compliance-badge');
+  if (violations.length === 0 && total <= 31) {
+    badgeEl.className = 'badge-pass';
+    badgeEl.innerHTML = '&check; LAWFUL CONSTITUTIONAL RF SPEECH';
+  } else {
+    badgeEl.className = 'badge-fail';
+    badgeEl.innerHTML = '&cross; PROHIBITED BLOCKADE / DENIAL-OF-SERVICE';
+  }
+
+  // Render Findings
+  var findingsEl = document.getElementById('audit-findings');
+  findingsEl.innerHTML = '';
+  for (var i = 0; i < violations.length; i++) {
+    var li = document.createElement('li');
+    li.style.color = 'var(--alert)';
+    li.innerHTML = '<span style="color:var(--alert)">&cross;</span> ' + violations[i];
+    findingsEl.appendChild(li);
+  }
+  for (var j = 0; j < passes.length; j++) {
+    var li2 = document.createElement('li');
+    li2.style.color = 'var(--ok)';
+    li2.innerHTML = '<span style="color:var(--ok)">&check;</span> ' + passes[j];
+    findingsEl.appendChild(li2);
+  }
+
+  // Render Dissector
+  renderDissector(access, oui, msg, cid);
+
+  // Render C++ Code Preview
+  updateCppPreview(msg, pwr, interval);
+}
+
+function renderDissector(access, oui, msg, cid) {
+  var box = document.getElementById('dissector-box');
+  box.innerHTML = '';
+
+  function addBlock(cls, hex, lbl) {
+    var d = document.createElement('div');
+    d.className = 'byte-block ' + cls;
+    d.innerHTML = '<span class="hex">' + hex + '</span><span class="lbl">' + lbl + '</span>';
+    box.appendChild(d);
+  }
+
+  addBlock('b-access', access.match(/.{1,2}/g).join(' '), 'Access Addr');
+  addBlock('b-mac', oui + ':A4:12', 'Adv Address');
+  addBlock('b-flags', '02 01 06', 'Block 1: Flags');
+
+  var hexName = '';
+  for (var i = 0; i < Math.min(msg.length, 8); i++) {
+    hexName += msg.charCodeAt(i).toString(16).toUpperCase() + ' ';
+  }
+  if (msg.length > 8) hexName += '...';
+  addBlock('b-name', hexName.trim(), 'Block 2: Name');
+
+  var hexCid = cid.match(/.{1,2}/g).reverse().join(' ');
+  addBlock('b-mfg', hexCid + ' ' + (cid === 'FFFF' ? '47 54' : '0F 05'), 'Block 3: Mfg Data');
+  addBlock('b-crc', 'E2 91 B4', 'CRC (3B)');
+
+  // Raw hex dump output
+  var rawPdu = 'ACCESS: 0x' + access + ' | MAC: ' + oui + ':A4:12\n';
+  rawPdu += 'PAYLOAD: 02 01 06 ';
+  var nameLen = (msg.length + 1).toString(16).padStart(2, '0').toUpperCase();
+  rawPdu += nameLen + ' 09 ';
+  for (var k = 0; k < msg.length; k++) {
+    rawPdu += msg.charCodeAt(k).toString(16).padStart(2, '0').toUpperCase() + ' ';
+  }
+  rawPdu += '\nMFG DATA: CID=0x' + cid + ' | CRC=3-Byte Polynomial';
+  document.getElementById('hex-output').textContent = rawPdu;
+}
+
+function updateCppPreview(msg, pwr, interval) {
+  var pwrConst = 'ESP_PWR_LVL_N12';
+  if (pwr === 0) pwrConst = 'ESP_PWR_LVL_P0';
+  else if (pwr === 9) pwrConst = 'ESP_PWR_LVL_P9';
+  else if (pwr === 20) pwrConst = 'ESP_PWR_LVL_P9 /* + External PA */';
+
+  var intervalHex = (interval === 20 ? '0x0020' : '0x00A0');
+
+  var code = '// Automatically generated from ble-sign-beacon compliance crafter\n' +
+    '#include <BLEDevice.h>\n' +
+    '#include <BLEAdvertising.h>\n\n' +
+    'static const uint8_t TROUBLE_OUI[3] = { 0x02, 0x47, 0x54 }; // Honest Good Trouble prefix\n\n' +
+    'void startBeacon() {\n' +
+    '  BLEDevice::init("' + msg + '");\n' +
+    '  BLEDevice::setPower((esp_power_level_t)' + pwrConst + ');\n' +
+    '  BLEAdvertising* adv = BLEDevice::getAdvertising();\n' +
+    '  BLEAdvertisementData data;\n' +
+    '  data.setName("' + msg + '");\n' +
+    '  std::string mfg; mfg += (char)0xFF; mfg += (char)0xFF; mfg.append("' + msg + '");\n' +
+    '  data.setManufacturerData(mfg);\n' +
+    '  adv->setAdvertisementData(data);\n' +
+    '  adv->setMinInterval(' + intervalHex + ');\n' +
+    '  adv->setMaxInterval(' + intervalHex + ' + 0x20);\n' +
+    '  adv->start();\n' +
+    '}';
+  document.getElementById('cpp-code-preview').textContent = code;
+}
+
+function copyCppCode() {
+  var code = document.getElementById('cpp-code-preview').textContent;
+  navigator.clipboard.writeText(code).then(function(){
+    var b = document.getElementById('btn-copy-cpp');
+    b.textContent = 'Copied to Clipboard!';
+    setTimeout(function(){ b.textContent = 'Copy C++ Code'; }, 1500);
+  });
+}
+
+// Live Scanner & Simulation
+function clearScanFeed() {
+  document.getElementById('scanner-feed').innerHTML = '';
+}
+
+function appendScan(time, mac, ouiType, rssi, name, status) {
+  var feed = document.getElementById('scanner-feed');
+  var row = document.createElement('div');
+  row.className = 'scanner-entry';
   
-  document.getElementById('hex-output').textContent = out;
+  var statusColor = (status === 'PASS' ? 'var(--ok)' : (status === 'CIVILIAN' ? 'var(--ink-dim)' : 'var(--alert)'));
+
+  row.innerHTML = '<span>[' + time + '] <strong style="color:var(--brass)">' + mac + '</strong> (' + ouiType + ')</span>' +
+    '<span>' + name + ' | ' + rssi + ' dBm | <b style="color:' + statusColor + '">' + status + '</b></span>';
+  
+  feed.appendChild(row);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function toggleSimStream() {
+  var btn = document.getElementById('btn-sim-stream');
+  if (simTimer) {
+    clearInterval(simTimer);
+    simTimer = null;
+    btn.textContent = 'Start Simulated Packet Stream';
+  } else {
+    btn.textContent = 'Stop Simulated Packet Stream';
+    runSimTick();
+    simTimer = setInterval(runSimTick, 1800);
+  }
+}
+
+var simEvents = [
+  { mac: '02:47:54:1B:A9:04', type: 'Good Trouble OUI', rssi: '-78', name: 'CONSENT_DENIED', status: 'PASS' },
+  { mac: '74:E1:82:94:C2:10', type: 'Civilian iPhone', rssi: '-64', name: '[Encrypted RPA / Apple Continuity]', status: 'CIVILIAN' },
+  { mac: '02:47:54:8C:33:FF', type: 'Good Trouble OUI', rssi: '-82', name: 'I_AM_NOT_DATA', status: 'PASS' },
+  { mac: '44:61:32:88:12:09', type: 'Civilian Android', rssi: '-71', name: 'Ambient Google GFPS beacon', status: 'CIVILIAN' },
+  { mac: '02:47:54:DF:01:2E', type: 'Good Trouble OUI', rssi: '-75', name: 'GOOD_TROUBLE', status: 'PASS' },
+  { mac: 'F0:D5:BF:EA:21:40', type: 'Spoofed Apple OUI', rssi: '-38', name: '[SourApple AirPods Pro DoS Frame]', status: 'BLOCKADE DoS' },
+  { mac: '02:47:54:40:91:8A', type: 'Good Trouble OUI', rssi: '-80', name: 'NOT_YOUR_NODE', status: 'PASS' }
+];
+var simIdx = 0;
+
+function runSimTick() {
+  var now = new Date().toTimeString().split(' ')[0];
+  var ev = simEvents[simIdx % simEvents.length];
+  simIdx++;
+  appendScan(now, ev.mac, ev.type, ev.rssi, ev.name, ev.status);
+}
+
+async function requestBleScan() {
+  if (!navigator.bluetooth) {
+    alert('Web Bluetooth is not supported in this browser. Please use desktop Chrome, Edge, or Opera.');
+    return;
+  }
+  try {
+    var device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: []
+    });
+    var now = new Date().toTimeString().split(' ')[0];
+    var isGt = (device.name && (device.name.indexOf('GOOD_TROUBLE') !== -1 || device.name.indexOf('CONSENT') !== -1));
+    appendScan(now, device.id.substring(0, 17), (isGt ? 'Good Trouble OUI' : 'Ambient BLE Device'), '-65', (device.name || 'Unnamed Peripheral'), (isGt ? 'PASS' : 'CIVILIAN'));
+  } catch (err) {
+    if (err.name !== 'NotFoundError') {
+      console.warn('Web Bluetooth Error:', err);
+    }
+  }
 }
 </script>
 </body>
