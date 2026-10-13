@@ -33,8 +33,14 @@ continuously broadcasts a Bluetooth advertisement with your message as the devic
 - advertising interval = 100 ms (standard BLE)
 - TX power = low (set in code)
 
-## ethics
+## ethics & prohibited behaviors (speech vs. blockade)
 
-- leave power LOW and timing as-is. don't "fill" the band — that breaks everyone's signal including the rest of the crowd's
-- keep the made-up shared OUI. don't impersonate real brands or nearby networks
-- one beacon per person. the crowd is the message; don't be individually loud
+- **Leave power LOW (-12 dBm) and timing standard (~100 ms + random jitter):** Don't amplify (+9 dBm) or burst spam (20 ms). That causes venue capture effect and band exhaustion, breaking everyone's signal including fellow protesters.
+- **Keep the honest locally-administered OUI (`02:47:54`):** Never impersonate Apple, Google, Microsoft, or Samsung hardware.
+- **Never doppelgang nearby civilian devices:** Sniffing and cloning real bystander MACs or GATT attributes fabricates false forensic evidence in automated surveillance dragnets (the "Sentinel" trap), framing innocent people.
+- **Never tamper with the Access Address (`0x8E89BED6`):** Injecting illegal sync words or snooped connection addresses poisons baseband receiver correlators and drops civilian connections.
+- **Never corrupt Block 1 (Flags):** Don't advertise contradictory BR/EDR capabilities or zero-timeout Limited Discoverable states that crash OS Bluetooth daemons or drain phone batteries.
+- **Never hijack Block 3 (Manufacturer Data) for UI DoS:** No SourApple / AppleJuice / SwiftPair / FastPair proximity popups that freeze civilian phones or block emergency calls.
+- **Never clone medical or safety UUIDs:** Never mirror Continuous Glucose Monitors (`0x181F`), Hearing Aids (`0x1851`), or key fobs.
+- **One beacon per person:** The crowd is the message; don't be individually loud.
+
