@@ -138,6 +138,66 @@ nav{font-family:var(--mono);font-size:.8em;letter-spacing:.04em;color:var(--ink-
 .scanner-entry{padding:4px 0;border-bottom:1px dotted var(--line);display:flex;justify-content:space-between;gap:8px}
 .scanner-entry:last-child{border-bottom:none}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://glomargadaffi.github.io/ble-sign-beacon/#faq",
+  "isPartOf": {
+    "@id": "https://glomargadaffi.github.io/ble-sign-beacon/#code"
+  },
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does a BLE sign beacon do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It broadcasts a short message as a Bluetooth Low Energy advertisement, with the message as the device name. Any nearby BLE scanner can read it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the message hidden or encrypted?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The README says it has no encryption and no attempt at anonymity, by design. If scanners see it, that is the point of a sit-in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What hardware do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Any ESP32 dev board, which the README prices at about $5 to $8. The internal BLE antenna is enough, so no antenna upgrade is needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I set my message?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Either edit the source and flash it through the Arduino IDE, or flash the config version. The config version creates a good-trouble-setup Wi-Fi network on first boot. Join it from a phone and set the message on the captive portal. Hold BOOT while replugging to change it later."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How loud is it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Low power, about -12 dBm, with the standard 100 ms advertising interval plus random jitter. The README asks users not to raise the power or send bursts of spam, because that crowds out everyone's signal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it impersonate other devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The README prohibits it. That covers using another vendor's identity, cloning nearby people's devices, and copying medical or safety device identifiers. It also asks each person to run one beacon, because the crowd is the message."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -499,6 +559,22 @@ adv->setAdvertisementData(data);</code></pre>
 </ol>
 
 </main>
+
+<section class="faq" id="faq">
+<h2>Frequently asked questions</h2>
+<h3>What does a BLE sign beacon do?</h3>
+<p>It broadcasts a short message as a Bluetooth Low Energy advertisement, with the message as the device name. Any nearby BLE scanner can read it.</p>
+<h3>Is the message hidden or encrypted?</h3>
+<p>No. The README says it has no encryption and no attempt at anonymity, by design. If scanners see it, that is the point of a sit-in.</p>
+<h3>What hardware do I need?</h3>
+<p>Any ESP32 dev board, which the README prices at about $5 to $8. The internal BLE antenna is enough, so no antenna upgrade is needed.</p>
+<h3>How do I set my message?</h3>
+<p>Either edit the source and flash it through the Arduino IDE, or flash the config version. The config version creates a good-trouble-setup Wi-Fi network on first boot. Join it from a phone and set the message on the captive portal. Hold BOOT while replugging to change it later.</p>
+<h3>How loud is it?</h3>
+<p>Low power, about -12 dBm, with the standard 100 ms advertising interval plus random jitter. The README asks users not to raise the power or send bursts of spam, because that crowds out everyone&#x27;s signal.</p>
+<h3>Can it impersonate other devices?</h3>
+<p>The README prohibits it. That covers using another vendor&#x27;s identity, cloning nearby people&#x27;s devices, and copying medical or safety device identifiers. It also asks each person to run one beacon, because the crowd is the message.</p>
+</section>
 
 <footer>
   <p style="font-family:var(--mono);font-size:.8em;color:var(--ink-dim);margin-top:3em;padding-top:1em;border-top:1px solid var(--line)">
